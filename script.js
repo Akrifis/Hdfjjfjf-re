@@ -1,9 +1,9 @@
 // Конфигурация
 const CONFIG = {
-    GITHUB_REPO: 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME',
+    GITHUB_REPO: 'https://github.com/Akrifis/Hdfjjfjf-re',
     BRANCH: 'main',
-    ANIME_LIST_FILE: 'anime_list.json',
-    GITHUB_RAW_URL: 'https://raw.githubusercontent.com'
+    ANIME_LIST_FILE: 'anime.json',
+    GITHUB_RAW_URL: 'https://raw.githubusercontent.com/Akrifis/Hdfjjfjf-re/main/anime.json'
 };
 
 // Глобальные переменные
