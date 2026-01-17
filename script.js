@@ -3,7 +3,7 @@ const CONFIG = {
     GITHUB_REPO: 'Akrifis/Hdfjjfjf-re',
     BRANCH: 'main',
     ANIME_LIST_FILE: 'anime_list.json',
-    GITHUB_RAW_URL: 'https://raw.githubusercontent.com/Akrifis/Hdfjjfjf-re/main/anime_list.json'
+    GITHUB_RAW_URL: 'https://raw.githubusercontent.com'
 };
 
 // Глобальные переменные
