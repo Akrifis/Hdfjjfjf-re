@@ -619,8 +619,6 @@ function getStatusText(status) {
         'completed': 'Завершен',
         'upcoming': 'Анонсирован',
         'онгоинг': 'Онгоинг',
-        'завершен': 'Завершен',
-        'анонсирован': 'Анонсирован'
     };
     
     return statusMap[status.toLowerCase()] || status;
