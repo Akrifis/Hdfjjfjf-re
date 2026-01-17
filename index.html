@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Re:Voice Anime - Главная</title>
+    <title>Re:Voice - Главная</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
             <div class="nav-brand" onclick="window.location.href='index.html'">
                 <i class="fas fa-play-circle"></i>
                 <span class="brand-text">Re:Voice</span>
-                <span class="brand-sub">Anime</span>
+                <span class="brand-sub">Online</span>
             </div>
 
             <!-- Гамбургер меню -->
@@ -32,20 +32,17 @@
             <a href="index.html" class="nav-link active">
                 <i class="fas fa-home"></i> Главная
             </a>
-            <a href="#" class="nav-link">
-                <i class="fas fa-fire"></i> Популярное
+            <a href="#" class="nav-link" onclick="showCategory('upcoming')">
+                <i class="fas fa-bullhorn"></i> Анонсы
             </a>
-            <a href="#" class="nav-link">
-                <i class="fas fa-clock"></i> Недавнее
+            <a href="#" class="nav-link" onclick="showCategory('ongoing')">
+                <i class="fas fa-play-circle"></i> Онгоинги
+            </a>
+            <a href="#" class="nav-link" onclick="showCategory('completed')">
+                <i class="fas fa-check-circle"></i> Завершенные
             </a>
             <a href="#" class="nav-link">
                 <i class="fas fa-heart"></i> Избранное
-            </a>
-            <a href="#" class="nav-link">
-                <i class="fas fa-list"></i> Категории
-            </a>
-            <a href="#" class="nav-link">
-                <i class="fas fa-info-circle"></i> О проекте
             </a>
             <a href="#" class="nav-link">
                 <i class="fas fa-question-circle"></i> Помощь
@@ -67,9 +64,37 @@
         </div>
     </header>
 
+    <!-- Категории -->
+    <div class="categories-container">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-globe"></i>
+                <span>Все аниме</span>
+            </button>
+            <button class="category-btn" data-category="upcoming">
+                <i class="fas fa-bullhorn"></i>
+                <span>Анонсы</span>
+            </button>
+            <button class="category-btn" data-category="ongoing">
+                <i class="fas fa-play-circle"></i>
+                <span>Онгоинги</span>
+            </button>
+            <button class="category-btn" data-category="completed">
+                <i class="fas fa-check-circle"></i>
+                <span>Завершенные</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Контент -->
     <main class="main-content">
         <div class="container">
+            <!-- Информация о категории -->
+            <div class="category-info" id="categoryInfo">
+                <h3 id="categoryTitle">Все аниме</h3>
+                <p id="categoryDescription">Просмотр всех доступных аниме</p>
+            </div>
+            
             <!-- Список аниме -->
             <div id="loading" class="loading">
                 <div class="spinner-container">
@@ -92,6 +117,15 @@
                 <button id="retryBtn" class="retry-btn">
                     <i class="fas fa-redo"></i> Попробовать снова
                 </button>
+            </div>
+
+            <!-- Сообщение "пустая категория" -->
+            <div id="emptyCategory" class="empty-category" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-film"></i>
+                </div>
+                <h3>Категория пуста</h3>
+                <p>В этой категории пока нет аниме. Добавьте аниме в файл anime_list.json</p>
             </div>
         </div>
     </main>
@@ -117,9 +151,9 @@
                     <div class="link-column">
                         <h4>Навигация</h4>
                         <a href="index.html"><i class="fas fa-chevron-right"></i> Главная</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Популярное</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Новинки</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Категории</a>
+                        <a href="#" onclick="showCategory('upcoming')"><i class="fas fa-chevron-right"></i> Анонсы</a>
+                        <a href="#" onclick="showCategory('ongoing')"><i class="fas fa-chevron-right"></i> Онгоинги</a>
+                        <a href="#" onclick="showCategory('completed')"><i class="fas fa-chevron-right"></i> Завершенные</a>
                     </div>
                     <div class="link-column">
                         <h4>Помощь</h4>
@@ -139,4 +173,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
