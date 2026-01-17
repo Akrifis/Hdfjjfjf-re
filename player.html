@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр аниме - Re:Voice</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-play-circle"></i>
+                <span>Re:Voice</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Назад к списку
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Плеер и информация -->
+    <main class="player-container">
+        <div class="player-wrapper">
+            <!-- Плеер Kodik -->
+            <div class="player-section">
+                <div id="playerPlaceholder" class="player-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Загрузка плеера...</p>
+                </div>
+                <iframe id="kodikPlayer" class="kodik-player" frameborder="0" allowfullscreen></iframe>
+                
+                <!-- Управление сериями -->
+                <div class="episode-controls">
+                    <button id="prevEpisode" class="episode-btn">
+                        <i class="fas fa-chevron-left"></i> Предыдущая
+                    </button>
+                    <div class="episode-selector">
+                        <span>Серия: </span>
+                        <select id="episodeSelect" class="episode-select">
+                            <option value="1">Серия 1</option>
+                        </select>
+                    </div>
+                    <button id="nextEpisode" class="episode-btn">
+                        Следующая <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Информация об аниме -->
+            <div class="anime-info-section">
+                <div class="anime-header">
+                    <img id="animePoster" class="anime-poster" src="" alt="Постер">
+                    <div class="anime-title-section">
+                        <h1 id="animeTitle">Загрузка...</h1>
+                        <div class="anime-meta">
+                            <span class="anime-status"><i class="fas fa-broadcast-tower"></i> <span id="animeStatus">Онгоинг</span></span>
+                            <span class="anime-year"><i class="fas fa-calendar"></i> <span id="animeYear">2024</span></span>
+                            <span class="anime-rating"><i class="fas fa-star"></i> <span id="animeRating">9.5</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="anime-details">
+                    <h3><i class="fas fa-info-circle"></i> Описание</h3>
+                    <p id="animeDescription">Загрузка описания...</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-microphone"></i> Озвучка:</span>
+                            <span class="info-value" id="animeVoice">Re:Voice</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-film"></i> Тип:</span>
+                            <span class="info-value" id="animeType">TV Сериал</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-list-ol"></i> Серии:</span>
+                            <span class="info-value" id="animeEpisodes">24</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-tags"></i> Жанры:</span>
+                            <span class="info-value" id="animeGenres">Приключения, Фэнтези</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn favorite-btn">
+                            <i class="far fa-heart"></i> В избранное
+                        </button>
+                        <button class="action-btn share-btn">
+                            <i class="fas fa-share-alt"></i> Поделиться
+                        </button>
+                        <button class="action-btn download-btn">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Похожие аниме -->
+    <section class="similar-anime">
+        <div class="container">
+            <h2><i class="fas fa-thumbs-up"></i> Похожие аниме</h2>
+            <div id="similarAnime" class="similar-grid">
+                <!-- Похожие аниме будут загружены сюда -->
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
