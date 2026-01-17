@@ -1,16 +1,16 @@
 [
     {
         "id": 1,
-        "title": "Название аниме",
+        "title": "Судьба: Странная подделка",
         "description": "Описание",
         "poster": "URL постера",
-        "year": 2024,
+        "year": 2026,
         "rating": 9.0,
-        "status": "ongoing",
+        "status": "Онгоинг",
         "type": "TV Сериал",
-        "episodes": 24,
-        "genres": ["Жанр1", "Жанр2"],
+        "episodes": 1,
+        "genres": ["Экшен", "Фэнтези"],
         "voice": "Re:Voice",
-        "kodik_link": "https://kodik.info/..."
+        "kodik_link": "//aniqit.com/seria/1560245/9bb5c5ab2e4f565cc58f0e0de63ba30d/720p"
     }
 ]
