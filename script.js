@@ -1,6 +1,6 @@
 // Конфигурация
 const CONFIG = {
-    GITHUB_REPO: 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME',
+    GITHUB_REPO: 'Akrifis/Hdfjjfjf-re',
     BRANCH: 'main',
     ANIME_LIST_FILE: 'anime_list.json',
     GITHUB_RAW_URL: 'https://raw.githubusercontent.com',
@@ -842,9 +842,9 @@ function getUrlParameter(name) {
 
 function getStatusText(status) {
     const statusMap = {
-        'upcoming': 'Анонс',
-        'ongoing': 'Онгоинг',
-        'completed': 'Завершен'
+        'Анорс': 'Анонс',
+        'Онгоинг': 'Онгоинг',
+        'Завершен': 'Завершен'
     };
     return statusMap[status] || status || 'Неизвестно';
 }
