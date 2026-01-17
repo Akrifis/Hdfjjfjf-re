@@ -12,6 +12,9 @@ let currentAnime = null;
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация гамбургер-меню
+    initHamburgerMenu();
+    
     // Определяем текущую страницу
     const isPlayerPage = window.location.pathname.includes('player.html');
     
@@ -20,7 +23,71 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         initMainPage();
     }
+    
+    // Инициализация кнопки "Наверх"
+    initScrollTop();
 });
+
+// Инициализация гамбургер-меню
+function initHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            // Блокировка скролла при открытом меню
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Закрытие меню при клике на ссылку
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', (event) => {
+            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+}
+
+// Инициализация кнопки "Наверх"
+function initScrollTop() {
+    const scrollTopBtn = document.getElementById('scrollTop');
+    if (!scrollTopBtn) return;
+    
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Показать/скрыть кнопку при скролле
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.style.opacity = '1';
+            scrollTopBtn.style.visibility = 'visible';
+            scrollTopBtn.style.transform = 'translateY(0)';
+        } else {
+            scrollTopBtn.style.opacity = '0';
+            scrollTopBtn.style.visibility = 'hidden';
+            scrollTopBtn.style.transform = 'translateY(10px)';
+        }
+    });
+}
 
 // Главная страница
 async function initMainPage() {
@@ -36,8 +103,17 @@ async function initMainPage() {
     // Инициализация фильтров
     initFilters();
     
+    // Инициализация быстрых фильтров
+    initQuickFilters();
+    
     // Кнопка повторной загрузки
     document.getElementById('retryBtn')?.addEventListener('click', loadAnimeList);
+    
+    // Инициализация пагинации
+    initPagination();
+    
+    // Инициализация переключения темы
+    initThemeToggle();
 }
 
 // Страница плеера
@@ -110,11 +186,6 @@ async function loadAnimeList() {
         if (loadingElement) loadingElement.style.display = 'none';
         if (errorElement) {
             errorElement.style.display = 'block';
-            // Обновляем сообщение об ошибке
-            const errorText = errorElement.querySelector('p');
-            if (errorText) {
-                errorText.textContent = 'Не удалось загрузить список аниме. Пожалуйста, проверьте подключение к интернету и настройки репозитория.';
-            }
         }
     }
 }
@@ -159,10 +230,14 @@ function createAnimeCard(anime) {
     // Используем изображение-заглушку, если постер не указан
     const posterUrl = anime.poster || 'https://via.placeholder.com/280x350/1a1a2e/ffffff?text=No+Image';
     
+    // Определяем бейдж
+    const badge = getAnimeBadge(anime);
+    
     card.innerHTML = `
         <div class="anime-poster-container">
             <img src="${posterUrl}" alt="${anime.title}" class="anime-poster">
             <div class="anime-overlay"></div>
+            ${badge ? `<div class="anime-badge">${badge}</div>` : ''}
         </div>
         <div class="anime-content">
             <h3 class="anime-title">${anime.title}</h3>
@@ -174,6 +249,13 @@ function createAnimeCard(anime) {
                     ${getStatusText(anime.status)}
                 </span>
             </div>
+            ${anime.genres ? `
+                <div class="anime-genres">
+                    ${anime.genres.slice(0, 3).map(genre => 
+                        `<span class="anime-genre">${genre}</span>`
+                    ).join('')}
+                </div>
+            ` : ''}
             <p class="anime-description">${anime.description || 'Нет описания'}</p>
             <button class="watch-btn" onclick="window.location.href='player.html?id=${anime.id}'">
                 <i class="fas fa-play"></i> Смотреть
@@ -192,7 +274,7 @@ function updateAnimeInfo() {
     document.title = `${currentAnime.title} - Re:Voice`;
     
     // Используем изображение-заглушку, если постер не указан
-    const posterUrl = currentAnime.poster || 'https://via.placeholder.com/150x225/1a1a2e/ffffff?text=No+Image';
+    const posterUrl = currentAnime.poster || 'https://via.placeholder.com/280x350/1a1a2e/ffffff?text=No+Image';
     
     // Обновляем элементы на странице
     const elements = {
@@ -389,7 +471,6 @@ function updatePlayerEpisode(episode) {
     window.history.replaceState({}, '', newUrl);
     
     // В реальном проекте здесь должна быть логика обновления плеера
-    // Например, обновление src iframe с новой ссылкой на серию
     console.log(`Переключение на серию ${episode}`);
     
     // Если у аниме есть отдельные ссылки для каждой серии
@@ -478,7 +559,7 @@ function initSorting() {
 
 // Фильтры
 function initFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
     
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -487,8 +568,32 @@ function initFilters() {
             // Добавляем активный класс нажатой кнопке
             this.classList.add('active');
             
-            const filterType = this.textContent;
+            const filterType = this.dataset.filter;
             filterAnimeList(filterType);
+        });
+    });
+}
+
+// Быстрые фильтры
+function initQuickFilters() {
+    const quickFilters = document.querySelectorAll('.quick-filter');
+    
+    quickFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Убираем активный класс у всех кнопок
+            quickFilters.forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
+            
+            const genre = this.textContent;
+            if (genre === 'Все жанры') {
+                renderAnimeList(animeList);
+            } else {
+                const filtered = animeList.filter(anime => 
+                    anime.genres && anime.genres.includes(genre)
+                );
+                renderAnimeList(filtered);
+            }
         });
     });
 }
@@ -498,17 +603,17 @@ function filterAnimeList(filterType) {
     let filteredList = [...animeList];
     
     switch (filterType) {
-        case 'Онгоинги':
+        case 'ongoing':
             filteredList = filteredList.filter(anime => 
                 anime.status && anime.status.toLowerCase() === 'ongoing'
             );
             break;
-        case 'Завершенные':
+        case 'completed':
             filteredList = filteredList.filter(anime => 
                 anime.status && anime.status.toLowerCase() === 'completed'
             );
             break;
-        case 'Фильмы':
+        case 'movies':
             filteredList = filteredList.filter(anime => 
                 anime.type && anime.type.toLowerCase().includes('фильм')
             );
@@ -519,6 +624,74 @@ function filterAnimeList(filterType) {
     }
     
     renderAnimeList(filteredList);
+}
+
+// Пагинация
+function initPagination() {
+    const pageButtons = document.querySelectorAll('.page-btn:not(.prev):not(.next)');
+    
+    pageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Убираем активный класс у всех кнопок
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
+            
+            // Здесь можно добавить логику загрузки страницы
+            console.log('Переход на страницу:', this.textContent);
+        });
+    });
+}
+
+// Переключение темы
+function initThemeToggle() {
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (!themeToggle) return;
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Переключение темы
+        document.body.classList.toggle('dark-theme');
+        
+        // Сохранение темы в localStorage
+        localStorage.setItem('theme', newTheme);
+        
+        // Обновление текста кнопки
+        const icon = themeToggle.querySelector('i');
+        const text = themeToggle.querySelector('span') || themeToggle;
+        
+        if (newTheme === 'dark') {
+            icon.className = 'fas fa-moon';
+            if (text.tagName === 'SPAN') {
+                text.textContent = 'Тёмная тема';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i> Тёмная тема';
+            }
+        } else {
+            icon.className = 'fas fa-sun';
+            if (text.tagName === 'SPAN') {
+                text.textContent = 'Светлая тема';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Светлая тема';
+            }
+        }
+    });
+    
+    // Загрузка сохранённой темы
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.remove('dark-theme');
+        const icon = themeToggle.querySelector('i');
+        const text = themeToggle.querySelector('span') || themeToggle;
+        icon.className = 'fas fa-sun';
+        if (text.tagName === 'SPAN') {
+            text.textContent = 'Светлая тема';
+        } else {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> Светлая тема';
+        }
+    }
 }
 
 // Вспомогательные функции
@@ -538,67 +711,20 @@ function getStatusText(status) {
     if (!status) return 'Неизвестно';
     
     const statusMap = {
-        'ongoing': 'Онгоинг',
-        'completed': 'Завершен',
-        'upcoming': 'Анонсирован',
+        'Завершен': 'Завершен',
+        'Анонсирован': 'Анонсирован',
         'онгоинг': 'Онгоинг',
-        'завершен': 'Завершен',
-        'анонсирован': 'Анонсирован'
     };
     
     return statusMap[status.toLowerCase()] || status;
 }
 
-// Обновленный CSS для пустых состояний
-function addEmptyStateStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .empty-state {
-            text-align: center;
-            padding: 4rem;
-            grid-column: 1 / -1;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .empty-state h3 {
-            margin-bottom: 1rem;
-            color: white;
-        }
-        
-        .empty-state p {
-            color: var(--gray-color);
-        }
-        
-        .anime-poster-container {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .anime-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .anime-card:hover .anime-overlay {
-            opacity: 1;
-        }
-    `;
-    document.head.appendChild(style);
+function getAnimeBadge(anime) {
+    if (anime.status === 'ongoing') return 'Онгоинг';
+    if (anime.rating >= 8.5) return 'Топ';
+    if (anime.year >= new Date().getFullYear() - 1) return 'Новинка';
+    return null;
 }
-
-// Добавляем стили для пустых состояний при загрузке
-addEmptyStateStyles();
 
 // Экспортируем функции для использования в консоли
 window.loadAnimeList = loadAnimeList;
