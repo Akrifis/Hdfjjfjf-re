@@ -12,5 +12,53 @@
         "genres": ["Экшен", "Фэнтези"],
         "voice": "Re:Voice",
         "kodik_link": "//aniqit.com/seria/1560245/9bb5c5ab2e4f565cc58f0e0de63ba30d/720p"
-    }
+    },
+    [
+  {
+    "id": 2,
+    "title": "тест",
+    "description": "Монки Д. Луффи мечтает стать Королём пиратов. Вместе со своей командой \"Пираты Соломенной Шляпы\" он отправляется в опасное путешествие по Гранд Лайну в поисках легендарного сокровища Ван-Пис.",
+    "poster": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=500",
+    "year": 1999,
+    "rating": 8.7,
+    "status": "ongoing",
+    "type": "TV Сериал",
+    "episodes": 1100,
+    "genres": ["Приключения", "Комедия", "Фэнтези", "Экшен"],
+    "voice": "Re:Voice",
+    "kodik_link": "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p",
+    "episode_links": [
+      "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=1",
+      "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=2",
+      "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=3",
+      "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=4",
+      "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=5"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Атака Титанов",
+    "description": "Человечество выживает в городах-крепостях, защищаясь от гигантских титанов. Эрен Йегер и его друзья вступают в Разведкорпус, чтобы сражаться с титанами и раскрыть тайны их происхождения.",
+    "poster": "https://images.unsplash.com/photo-1531315630201-bb15abeb1653?auto=format&fit=crop&w=500",
+    "year": 2013,
+    "rating": 9.0,
+    "status": "completed",
+    "type": "TV Сериал",
+    "episodes": 75,
+    "genres": ["Драма", "Фэнтези", "Ужасы", "Экшен"],
+    "voice": "Re:Voice",
+    "kodik_link": "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p",
+    "episode_links": [
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=1",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=2",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=3",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=4",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=5",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=6",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=7",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=8",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=9",
+      "https://kodik.info/serial/1758/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p?season=1&episode=10"
+    ]
+  },
 ]
