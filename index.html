@@ -13,13 +13,13 @@
     <nav class="navbar">
         <div class="nav-container">
             <!-- Логотип -->
-            <div class="nav-brand">
+            <div class="nav-brand" onclick="window.location.href='index.html'">
                 <i class="fas fa-play-circle"></i>
                 <span class="brand-text">Re:Voice</span>
                 <span class="brand-sub">Anime</span>
             </div>
 
-            <!-- Гамбургер меню (для мобильных) -->
+            <!-- Гамбургер меню -->
             <button class="hamburger" id="hamburger">
                 <div class="hamburger-line"></div>
                 <div class="hamburger-line"></div>
@@ -30,121 +30,75 @@
             <div class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link active">
                     <i class="fas fa-home"></i> Главная
-                    <span class="nav-indicator"></span>
                 </a>
                 <a href="#" class="nav-link">
                     <i class="fas fa-fire"></i> Популярное
-                    <span class="nav-indicator"></span>
                 </a>
                 <a href="#" class="nav-link">
                     <i class="fas fa-clock"></i> Недавнее
-                    <span class="nav-indicator"></span>
                 </a>
                 <a href="#" class="nav-link">
                     <i class="fas fa-heart"></i> Избранное
-                    <span class="nav-indicator"></span>
                 </a>
                 <a href="#" class="nav-link">
                     <i class="fas fa-list"></i> Категории
-                    <span class="nav-indicator"></span>
-                </a>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-calendar"></i> Расписание
-                    <span class="nav-indicator"></span>
                 </a>
             </div>
 
-            <!-- Поиск и профиль -->
-            <div class="nav-actions">
-                <div class="nav-search">
-                    <input type="text" id="searchInput" placeholder="Поиск аниме...">
-                    <button class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <div class="nav-profile">
-                    <button class="profile-btn">
-                        <i class="fas fa-user"></i>
-                        <span class="profile-text">Войти</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="#"><i class="fas fa-user-circle"></i> Профиль</a>
-                        <a href="#"><i class="fas fa-cog"></i> Настройки</a>
-                        <a href="#"><i class="fas fa-moon"></i> Тема</a>
-                        <a href="#"><i class="fas fa-sign-out-alt"></i> Выйти</a>
-                    </div>
-                </div>
+            <!-- Поиск -->
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Поиск аниме...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- Заголовок и фильтры -->
+    <!-- Заголовок -->
     <header class="main-header">
         <div class="header-content">
             <div class="header-text">
                 <h1>
                     <span class="gradient-text">
                         <i class="fas fa-microphone-alt"></i> Re:Voice
-                    </span> Anime
+                    </span>
                 </h1>
-                <p class="subtitle">Лучшая профессиональная озвучка для ваших любимых аниме</p>
-                <div class="stats">
-                    <div class="stat">
-                        <i class="fas fa-film"></i>
-                        <span>1000+</span>
-                        <p>Аниме</p>
-                    </div>
-                    <div class="stat">
-                        <i class="fas fa-microphone"></i>
-                        <span>24/7</span>
-                        <p>Озвучка</p>
-                    </div>
-                    <div class="stat">
-                        <i class="fas fa-users"></i>
-                        <span>50K+</span>
-                        <p>Зрителей</p>
-                    </div>
-                </div>
+                <p class="subtitle">Профессиональная озвучка для ваших любимых аниме</p>
             </div>
             
-            <div class="filters">
-                <div class="filter-group">
-                    <div class="filter-title">
-                        <i class="fas fa-filter"></i>
-                        <span>Фильтры</span>
+            <!-- Фильтры -->
+            <div class="filters-section">
+                <div class="filters-group">
+                    <div class="filter-category">
+                        <h3><i class="fas fa-filter"></i> Статус</h3>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="all">
+                                <i class="fas fa-globe"></i> Все
+                            </button>
+                            <button class="filter-btn" data-filter="ongoing">
+                                <i class="fas fa-play-circle"></i> Онгоинги
+                            </button>
+                            <button class="filter-btn" data-filter="completed">
+                                <i class="fas fa-check-circle"></i> Завершенные
+                            </button>
+                        </div>
                     </div>
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-globe"></i> Все
-                    </button>
-                    <button class="filter-btn" data-filter="ongoing">
-                        <i class="fas fa-play-circle"></i> Онгоинги
-                    </button>
-                    <button class="filter-btn" data-filter="completed">
-                        <i class="fas fa-check-circle"></i> Завершенные
-                    </button>
-                    <button class="filter-btn" data-filter="movies">
-                        <i class="fas fa-film"></i> Фильмы
-                    </button>
-                </div>
-                <div class="sort-group">
-                    <div class="sort-title">
-                        <i class="fas fa-sort-amount-down"></i>
-                        <span>Сортировка</span>
+                    
+                    <div class="filter-category">
+                        <h3><i class="fas fa-sort-amount-down"></i> Сортировка</h3>
+                        <div class="sort-buttons">
+                            <button class="sort-btn active" data-sort="new">
+                                <i class="fas fa-calendar-plus"></i> Новые
+                            </button>
+                            <button class="sort-btn" data-sort="rating">
+                                <i class="fas fa-star"></i> Рейтинг
+                            </button>
+                            <button class="sort-btn" data-sort="name">
+                                <i class="fas fa-sort-alpha-down"></i> Название
+                            </button>
+                        </div>
                     </div>
-                    <select id="sortSelect" class="sort-select">
-                        <option value="new">
-                            <i class="fas fa-calendar-plus"></i> Сначала новые
-                        </option>
-                        <option value="popular">
-                            <i class="fas fa-fire"></i> Популярные
-                        </option>
-                        <option value="rating">
-                            <i class="fas fa-star"></i> Высокий рейтинг
-                        </option>
-                        <option value="name">
-                            <i class="fas fa-sort-alpha-down"></i> По названию
-                        </option>
-                    </select>
                 </div>
             </div>
         </div>
@@ -153,18 +107,6 @@
     <!-- Контент -->
     <main class="main-content">
         <div class="container">
-            <!-- Быстрые фильтры -->
-            <div class="quick-filters">
-                <button class="quick-filter active">Все жанры</button>
-                <button class="quick-filter">Приключения</button>
-                <button class="quick-filter">Романтика</button>
-                <button class="quick-filter">Фэнтези</button>
-                <button class="quick-filter">Комедия</button>
-                <button class="quick-filter">Драма</button>
-                <button class="quick-filter">Экшен</button>
-                <button class="quick-filter">Сёнен</button>
-            </div>
-            
             <!-- Список аниме -->
             <div id="loading" class="loading">
                 <div class="spinner-container">
@@ -191,21 +133,6 @@
         </div>
     </main>
 
-    <!-- Пагинация -->
-    <div class="pagination">
-        <button class="page-btn prev" disabled>
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <span class="page-dots">...</span>
-        <button class="page-btn">10</button>
-        <button class="page-btn next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-
     <!-- Футер -->
     <footer class="footer">
         <div class="footer-content">
@@ -215,13 +142,11 @@
                         <i class="fas fa-play-circle"></i>
                         <span>Re:Voice</span>
                     </div>
-                    <p>Лучшая платформа для просмотра аниме с профессиональной озвучкой Re:Voice</p>
+                    <p>Платформа для просмотра аниме с озвучкой Re:Voice</p>
                     <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                     </div>
                 </div>
                 
@@ -238,31 +163,13 @@
                         <a href="#"><i class="fas fa-chevron-right"></i> FAQ</a>
                         <a href="#"><i class="fas fa-chevron-right"></i> Правила</a>
                         <a href="#"><i class="fas fa-chevron-right"></i> Контакты</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Поддержка</a>
-                    </div>
-                    <div class="link-column">
-                        <h4>Правовая информация</h4>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Политика конфиденциальности</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Условия использования</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> DMCA</a>
-                        <a href="#"><i class="fas fa-chevron-right"></i> Отказ от ответственности</a>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <div class="footer-info">
-                    <p><i class="fas fa-info-circle"></i> Все аниме предоставляются только для ознакомления</p>
-                    <p><i class="fas fa-copyright"></i> ©2025 Re:Voice. Все права защищены.</p>
-                </div>
-                <div class="footer-actions">
-                    <button class="theme-toggle">
-                        <i class="fas fa-moon"></i> Тёмная тема
-                    </button>
-                    <button class="scroll-top" id="scrollTop">
-                        <i class="fas fa-arrow-up"></i> Наверх
-                    </button>
-                </div>
+                <p><i class="fas fa-info-circle"></i> Все аниме предоставляются только для ознакомления</p>
+                <p><i class="fas fa-copyright"></i> 2024 Re:Voice Anime</p>
             </div>
         </div>
     </footer>
