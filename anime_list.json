@@ -6,7 +6,7 @@
     "poster": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=500",
     "year": 1999,
     "rating": 8.7,
-    "status": "ongoing",
+    "status": "Онгоинг",
     "type": "TV Сериал",
     "episodes": 1100,
     "genres": ["Приключения", "Комедия", "Фэнтези", "Экшен"],
@@ -52,7 +52,7 @@
     "poster": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=500",
     "year": 2024,
     "rating": 0,
-    "status": "upcoming",
+    "status": "Анонс",
     "type": "TV Сериал",
     "episodes": 12,
     "genres": ["Фэнтези", "Приключения", "Драма"],
@@ -67,7 +67,7 @@
     "poster": "https://images.unsplash.com/photo-1531315630201-bb15abeb1653?auto=format&fit=crop&w=500",
     "year": 2023,
     "rating": 9.2,
-    "status": "completed",
+    "status": "Завершен",
     "type": "TV Сериал",
     "episodes": 28,
     "genres": ["Драма", "Фэнтези", "Ужасы", "Экшен"],
@@ -96,7 +96,7 @@
     "poster": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=500",
     "year": 2020,
     "rating": 8.6,
-    "status": "ongoing",
+    "status": "Онгоинг",
     "type": "TV Сериал",
     "episodes": 47,
     "genres": ["Экшен", "Фэнтези", "Сверхъестественное"],
@@ -117,4 +117,4 @@
     ],
     "last_updated": "2024-01-12"
   }
-      ]
+  ]
