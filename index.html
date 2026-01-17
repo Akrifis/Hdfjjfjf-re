@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re:Voice Anime - Главная</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-play-circle"></i>
+                <span>Re:Voice</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">
+                    <i class="fas fa-home"></i> Главная
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-star"></i> Популярное
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-clock"></i> Недавнее
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-heart"></i> Избранное
+                </a>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Поиск аниме...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Заголовок и фильтры -->
+    <header class="main-header">
+        <div class="header-content">
+            <h1><i class="fas fa-microphone-alt"></i> Аниме с озвучкой Re:Voice</h1>
+            <p class="subtitle">Лучшая озвучка для любимых аниме</p>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <button class="filter-btn active">Все</button>
+                    <button class="filter-btn">Онгоинги</button>
+                    <button class="filter-btn">Завершенные</button>
+                    <button class="filter-btn">Фильмы</button>
+                </div>
+                <div class="sort-group">
+                    <select id="sortSelect" class="sort-select">
+                        <option value="new">Сначала новые</option>
+                        <option value="popular">Популярные</option>
+                        <option value="rating">Высокий рейтинг</option>
+                        <option value="name">По названию</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Контент -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Список аниме будет загружаться сюда -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Загрузка списка аниме...</p>
+            </div>
+            
+            <div id="animeGrid" class="anime-grid">
+                <!-- Аниме карточки будут вставлены сюда через JavaScript -->
+            </div>
+
+            <!-- Сообщение об ошибке -->
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Ошибка загрузки</h3>
+                <p>Не удалось загрузить список аниме. Пожалуйста, проверьте подключение к интернету.</p>
+                <button id="retryBtn" class="retry-btn">Попробовать снова</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Re:Voice Anime</h3>
+                <p>Лучшая платформа для просмотра аниме с профессиональной озвучкой</p>
+            </div>
+            <div class="footer-section">
+                <h4>Ссылки</h4>
+                <a href="#">О проекте</a>
+                <a href="#">Правила</a>
+                <a href="#">Контакты</a>
+            </div>
+            <div class="footer-section">
+                <h4>Сообщество</h4>
+                <a href="#"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#"><i class="fab fa-telegram"></i> Telegram</a>
+                <a href="#"><i class="fab fa-vk"></i> VK</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Re:Voice Anime. Все права защищены.</p>
+            <p>Все аниме предоставляются только для ознакомления</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
