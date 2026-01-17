@@ -9,6 +9,8 @@ const CONFIG = {
 // Глобальные переменные
 let animeList = [];
 let currentAnime = null;
+let currentFilter = 'all';
+let currentSort = 'new';
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,9 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         initMainPage();
     }
-    
-    // Инициализация кнопки "Наверх"
-    initScrollTop();
 });
 
 // Инициализация гамбургер-меню
@@ -63,32 +62,6 @@ function initHamburgerMenu() {
     }
 }
 
-// Инициализация кнопки "Наверх"
-function initScrollTop() {
-    const scrollTopBtn = document.getElementById('scrollTop');
-    if (!scrollTopBtn) return;
-    
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-    
-    // Показать/скрыть кнопку при скролле
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-            scrollTopBtn.style.opacity = '1';
-            scrollTopBtn.style.visibility = 'visible';
-            scrollTopBtn.style.transform = 'translateY(0)';
-        } else {
-            scrollTopBtn.style.opacity = '0';
-            scrollTopBtn.style.visibility = 'hidden';
-            scrollTopBtn.style.transform = 'translateY(10px)';
-        }
-    });
-}
-
 // Главная страница
 async function initMainPage() {
     // Загрузка списка аниме
@@ -97,23 +70,14 @@ async function initMainPage() {
     // Инициализация поиска
     initSearch();
     
-    // Инициализация сортировки
-    initSorting();
-    
     // Инициализация фильтров
     initFilters();
     
-    // Инициализация быстрых фильтров
-    initQuickFilters();
+    // Инициализация сортировки
+    initSorting();
     
     // Кнопка повторной загрузки
     document.getElementById('retryBtn')?.addEventListener('click', loadAnimeList);
-    
-    // Инициализация пагинации
-    initPagination();
-    
-    // Инициализация переключения темы
-    initThemeToggle();
 }
 
 // Страница плеера
@@ -173,10 +137,8 @@ async function loadAnimeList() {
             throw new Error('Список аниме пустой');
         }
         
-        // Отображаем аниме на главной странице
-        if (animeGrid) {
-            renderAnimeList(animeList);
-        }
+        // Применяем текущие фильтры и сортировку
+        applyFiltersAndSort();
         
         if (loadingElement) loadingElement.style.display = 'none';
         
@@ -188,6 +150,42 @@ async function loadAnimeList() {
             errorElement.style.display = 'block';
         }
     }
+}
+
+// Применение фильтров и сортировки
+function applyFiltersAndSort() {
+    let filteredList = [...animeList];
+    
+    // Применяем фильтр
+    if (currentFilter === 'ongoing') {
+        filteredList = filteredList.filter(anime => 
+            anime.status && anime.status.toLowerCase() === 'ongoing'
+        );
+    } else if (currentFilter === 'completed') {
+        filteredList = filteredList.filter(anime => 
+            anime.status && anime.status.toLowerCase() === 'completed'
+        );
+    }
+    
+    // Применяем сортировку
+    switch (currentSort) {
+        case 'new':
+            filteredList.sort((a, b) => (b.year || 0) - (a.year || 0));
+            break;
+        case 'rating':
+            filteredList.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            break;
+        case 'name':
+            filteredList.sort((a, b) => {
+                const titleA = a.title || '';
+                const titleB = b.title || '';
+                return titleA.localeCompare(titleB, 'ru');
+            });
+            break;
+    }
+    
+    // Отображаем отфильтрованный список
+    renderAnimeList(filteredList);
 }
 
 // Рендеринг списка аниме
@@ -203,8 +201,8 @@ function renderAnimeList(list) {
         animeGrid.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-film"></i>
-                <h3>Список аниме пуст</h3>
-                <p>Добавьте аниме в файл anime_list.json в репозитории</p>
+                <h3>Аниме не найдены</h3>
+                <p>Попробуйте изменить фильтры или поисковый запрос</p>
             </div>
         `;
         return;
@@ -223,27 +221,24 @@ function createAnimeCard(anime) {
     card.className = 'anime-card';
     card.dataset.id = anime.id;
     
-    // Создаем цветной градиент на основе рейтинга
-    const rating = anime.rating || 7.0;
-    const ratingColor = getRatingColor(rating);
-    
     // Используем изображение-заглушку, если постер не указан
-    const posterUrl = anime.poster || 'https://via.placeholder.com/280x350/1a1a2e/ffffff?text=No+Image';
+    const posterUrl = anime.poster || 'https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image';
     
     // Определяем бейдж
     const badge = getAnimeBadge(anime);
     
     card.innerHTML = `
         <div class="anime-poster-container">
-            <img src="${posterUrl}" alt="${anime.title}" class="anime-poster">
+            <img src="${posterUrl}" alt="${anime.title}" class="anime-poster" 
+                 onerror="this.src='https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image'">
             <div class="anime-overlay"></div>
             ${badge ? `<div class="anime-badge">${badge}</div>` : ''}
         </div>
         <div class="anime-content">
             <h3 class="anime-title">${anime.title}</h3>
             <div class="anime-meta">
-                <span class="anime-rating" style="background: ${ratingColor}">
-                    <i class="fas fa-star"></i> ${rating}
+                <span class="anime-rating">
+                    <i class="fas fa-star"></i> ${anime.rating || 'Н/Д'}
                 </span>
                 <span class="anime-status ${anime.status?.toLowerCase() || 'ongoing'}">
                     ${getStatusText(anime.status)}
@@ -273,34 +268,47 @@ function updateAnimeInfo() {
     // Обновляем заголовок страницы
     document.title = `${currentAnime.title} - Re:Voice`;
     
+    // Обновляем заголовок плеера
+    const playerTitle = document.getElementById('playerTitle');
+    if (playerTitle) {
+        playerTitle.textContent = currentAnime.title;
+    }
+    
     // Используем изображение-заглушку, если постер не указан
-    const posterUrl = currentAnime.poster || 'https://via.placeholder.com/280x350/1a1a2e/ffffff?text=No+Image';
+    const posterUrl = currentAnime.poster || 'https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image';
     
     // Обновляем элементы на странице
     const elements = {
         'animeTitle': currentAnime.title,
         'animeDescription': currentAnime.description || 'Нет описания',
         'animeYear': currentAnime.year || 'Неизвестно',
-        'animeRating': currentAnime.rating || 'Н/Д',
-        'animeStatus': getStatusText(currentAnime.status),
-        'animeVoice': currentAnime.voice || 'Re:Voice',
-        'animeType': currentAnime.type || 'TV Сериал',
+        'animeRating': currentAnime.rating || '0.0',
         'animeEpisodes': currentAnime.episodes || '?',
-        'animeGenres': (currentAnime.genres || ['Неизвестно']).join(', ')
+        'animePoster': posterUrl
     };
     
     Object.keys(elements).forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            element.textContent = elements[id];
-            
-            // Особый случай для изображения
             if (id === 'animePoster') {
-                element.src = posterUrl;
+                element.src = elements[id];
                 element.alt = currentAnime.title;
+                element.onerror = function() {
+                    this.src = 'https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image';
+                };
+            } else {
+                element.textContent = elements[id];
             }
         }
     });
+    
+    // Обновляем жанры
+    const genresList = document.getElementById('animeGenres');
+    if (genresList && currentAnime.genres) {
+        genresList.innerHTML = currentAnime.genres.map(genre => 
+            `<span class="genre-tag">${genre}</span>`
+        ).join('');
+    }
 }
 
 // Загрузка плеера Kodik
@@ -329,9 +337,11 @@ function loadKodikPlayer() {
     } else {
         // Если ссылки нет, показываем сообщение
         placeholder.innerHTML = `
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Плеер недоступен</h3>
-            <p>Ссылка на плеер Kodik не указана</p>
+            <div class="placeholder-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Плеер недоступен</h3>
+                <p>Ссылка на плеер не указана</p>
+            </div>
         `;
     }
 }
@@ -343,17 +353,6 @@ function loadSimilarAnime() {
     const similarGrid = document.getElementById('similarAnime');
     if (!similarGrid) return;
     
-    // Если в списке только одно аниме (текущее), не показываем похожие
-    if (animeList.length <= 1) {
-        similarGrid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-info-circle"></i>
-                <p>Нет похожих аниме в списке</p>
-            </div>
-        `;
-        return;
-    }
-    
     // Фильтруем аниме по жанрам (если есть)
     const currentGenres = currentAnime.genres || [];
     let similarAnime = [];
@@ -364,15 +363,15 @@ function loadSimilarAnime() {
             
             const animeGenres = anime.genres || [];
             return animeGenres.some(genre => currentGenres.includes(genre));
-        }).slice(0, 6);
+        }).slice(0, 4);
     }
     
     // Если не нашли по жанрам, берем случайные аниме
-    if (similarAnime.length < 6) {
+    if (similarAnime.length < 4) {
         const randomAnime = animeList
             .filter(anime => anime.id !== currentAnime.id)
             .sort(() => Math.random() - 0.5)
-            .slice(0, 6 - similarAnime.length);
+            .slice(0, 4 - similarAnime.length);
         
         similarAnime = [...similarAnime, ...randomAnime];
     }
@@ -391,98 +390,71 @@ function loadSimilarAnime() {
     // Рендерим похожие аниме
     similarGrid.innerHTML = '';
     similarAnime.forEach(anime => {
-        const posterUrl = anime.poster || 'https://via.placeholder.com/200x300/1a1a2e/ffffff?text=No+Image';
+        const posterUrl = anime.poster || 'https://via.placeholder.com/200x300/0f1e2d/ffffff?text=No+Image';
         
         const similarCard = document.createElement('div');
         similarCard.className = 'anime-card';
         similarCard.style.cursor = 'pointer';
+        similarCard.onclick = () => {
+            window.location.href = `player.html?id=${anime.id}`;
+        };
         similarCard.innerHTML = `
-            <img src="${posterUrl}" alt="${anime.title}" class="anime-poster">
+            <img src="${posterUrl}" alt="${anime.title}" class="anime-poster"
+                 onerror="this.src='https://via.placeholder.com/200x300/0f1e2d/ffffff?text=No+Image'">
             <div class="anime-content">
                 <h4 class="anime-title">${anime.title}</h4>
-                <button class="watch-btn" onclick="window.location.href='player.html?id=${anime.id}'">
-                    <i class="fas fa-play"></i> Смотреть
-                </button>
+                <div class="anime-meta">
+                    <span class="anime-rating">
+                        <i class="fas fa-star"></i> ${anime.rating || 'Н/Д'}
+                    </span>
+                </div>
             </div>
         `;
         similarGrid.appendChild(similarCard);
     });
 }
 
-// Управление сериями
-function initEpisodeControls() {
-    const episodeSelect = document.getElementById('episodeSelect');
-    const prevBtn = document.getElementById('prevEpisode');
-    const nextBtn = document.getElementById('nextEpisode');
+// Инициализация фильтров
+function initFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
     
-    if (!episodeSelect) return;
-    
-    // Определяем количество серий
-    const totalEpisodes = currentAnime?.episodes || 1;
-    
-    // Очищаем список серий
-    episodeSelect.innerHTML = '';
-    
-    // Заполняем список серий
-    for (let i = 1; i <= totalEpisodes; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `Серия ${i}`;
-        episodeSelect.appendChild(option);
-    }
-    
-    // Устанавливаем текущую серию из URL или первую
-    const currentEpisode = parseInt(getUrlParameter('episode')) || 1;
-    episodeSelect.value = currentEpisode;
-    
-    // Обработчики событий
-    episodeSelect.addEventListener('change', function() {
-        updatePlayerEpisode(this.value);
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Убираем активный класс у всех кнопок фильтров
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
+            
+            // Обновляем текущий фильтр
+            currentFilter = this.dataset.filter;
+            
+            // Применяем фильтры и сортировку
+            applyFiltersAndSort();
+        });
     });
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            const current = parseInt(episodeSelect.value);
-            if (current > 1) {
-                episodeSelect.value = current - 1;
-                updatePlayerEpisode(episodeSelect.value);
-            }
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            const current = parseInt(episodeSelect.value);
-            if (current < totalEpisodes) {
-                episodeSelect.value = current + 1;
-                updatePlayerEpisode(episodeSelect.value);
-            }
-        });
-    }
 }
 
-// Обновление серии в плеере
-function updatePlayerEpisode(episode) {
-    if (!currentAnime) return;
+// Инициализация сортировки
+function initSorting() {
+    const sortButtons = document.querySelectorAll('.sort-btn[data-sort]');
     
-    // Обновляем URL страницы
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.set('episode', episode);
-    window.history.replaceState({}, '', newUrl);
-    
-    // В реальном проекте здесь должна быть логика обновления плеера
-    console.log(`Переключение на серию ${episode}`);
-    
-    // Если у аниме есть отдельные ссылки для каждой серии
-    if (currentAnime.episode_links && currentAnime.episode_links[episode - 1]) {
-        const player = document.getElementById('kodikPlayer');
-        if (player) {
-            player.src = currentAnime.episode_links[episode - 1];
-        }
-    }
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Убираем активный класс у всех кнопок сортировки
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
+            
+            // Обновляем текущую сортировку
+            currentSort = this.dataset.sort;
+            
+            // Применяем фильтры и сортировку
+            applyFiltersAndSort();
+        });
+    });
 }
 
-// Поиск
+// Инициализация поиска
 function initSearch() {
     const searchInput = document.getElementById('searchInput');
     if (!searchInput) return;
@@ -496,7 +468,7 @@ function initSearch() {
             const searchTerm = this.value.toLowerCase().trim();
             
             if (searchTerm.length === 0) {
-                renderAnimeList(animeList);
+                applyFiltersAndSort();
                 return;
             }
             
@@ -513,7 +485,7 @@ function initSearch() {
                 
                 // Поиск по жанрам
                 if (anime.genres && Array.isArray(anime.genres)) {
-                    return anime.genres.some(genre => 
+                    return animeGenres.some(genre => 
                         genre.toLowerCase().includes(searchTerm)
                     );
                 }
@@ -526,170 +498,109 @@ function initSearch() {
     });
 }
 
-// Сортировка
-function initSorting() {
-    const sortSelect = document.getElementById('sortSelect');
-    if (!sortSelect) return;
+// Инициализация управления сериями
+function initEpisodeControls() {
+    const prevBtn = document.getElementById('prevEpisode');
+    const nextBtn = document.getElementById('nextEpisode');
+    const currentEpisode = document.getElementById('currentEpisode');
+    const totalEpisodes = document.getElementById('totalEpisodes');
+    const episodeList = document.getElementById('episodeList');
     
-    sortSelect.addEventListener('change', function() {
-        let sortedList = [...animeList];
-        
-        switch (this.value) {
-            case 'new':
-                sortedList.sort((a, b) => (b.year || 0) - (a.year || 0));
-                break;
-            case 'popular':
-                sortedList.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-                break;
-            case 'rating':
-                sortedList.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-                break;
-            case 'name':
-                sortedList.sort((a, b) => {
-                    const titleA = a.title || '';
-                    const titleB = b.title || '';
-                    return titleA.localeCompare(titleB, 'ru');
-                });
-                break;
-        }
-        
-        renderAnimeList(sortedList);
-    });
-}
-
-// Фильтры
-function initFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
+    if (!currentAnime) return;
     
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс нажатой кнопке
-            this.classList.add('active');
-            
-            const filterType = this.dataset.filter;
-            filterAnimeList(filterType);
-        });
-    });
-}
-
-// Быстрые фильтры
-function initQuickFilters() {
-    const quickFilters = document.querySelectorAll('.quick-filter');
+    const episodes = currentAnime.episodes || 1;
+    let currentEpisodeNum = parseInt(getUrlParameter('episode')) || 1;
     
-    quickFilters.forEach(filter => {
-        filter.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок
-            quickFilters.forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс нажатой кнопке
-            this.classList.add('active');
-            
-            const genre = this.textContent;
-            if (genre === 'Все жанры') {
-                renderAnimeList(animeList);
-            } else {
-                const filtered = animeList.filter(anime => 
-                    anime.genres && anime.genres.includes(genre)
-                );
-                renderAnimeList(filtered);
-            }
-        });
-    });
-}
-
-// Фильтрация аниме
-function filterAnimeList(filterType) {
-    let filteredList = [...animeList];
-    
-    switch (filterType) {
-        case 'ongoing':
-            filteredList = filteredList.filter(anime => 
-                anime.status && anime.status.toLowerCase() === 'ongoing'
-            );
-            break;
-        case 'completed':
-            filteredList = filteredList.filter(anime => 
-                anime.status && anime.status.toLowerCase() === 'completed'
-            );
-            break;
-        case 'movies':
-            filteredList = filteredList.filter(anime => 
-                anime.type && anime.type.toLowerCase().includes('фильм')
-            );
-            break;
-        default:
-            // Все - ничего не фильтруем
-            break;
+    // Обновляем информацию о сериях
+    if (totalEpisodes) {
+        totalEpisodes.textContent = `Всего: ${episodes} серий`;
     }
     
-    renderAnimeList(filteredList);
-}
-
-// Пагинация
-function initPagination() {
-    const pageButtons = document.querySelectorAll('.page-btn:not(.prev):not(.next)');
+    if (currentEpisode) {
+        currentEpisode.textContent = currentEpisodeNum;
+    }
     
-    pageButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс нажатой кнопке
-            this.classList.add('active');
-            
-            // Здесь можно добавить логику загрузки страницы
-            console.log('Переход на страницу:', this.textContent);
-        });
-    });
-}
-
-// Переключение темы
-function initThemeToggle() {
-    const themeToggle = document.querySelector('.theme-toggle');
-    if (!themeToggle) return;
-    
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        // Переключение темы
-        document.body.classList.toggle('dark-theme');
-        
-        // Сохранение темы в localStorage
-        localStorage.setItem('theme', newTheme);
-        
-        // Обновление текста кнопки
-        const icon = themeToggle.querySelector('i');
-        const text = themeToggle.querySelector('span') || themeToggle;
-        
-        if (newTheme === 'dark') {
-            icon.className = 'fas fa-moon';
-            if (text.tagName === 'SPAN') {
-                text.textContent = 'Тёмная тема';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i> Тёмная тема';
-            }
-        } else {
-            icon.className = 'fas fa-sun';
-            if (text.tagName === 'SPAN') {
-                text.textContent = 'Светлая тема';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Светлая тема';
-            }
+    // Создаем список серий
+    if (episodeList) {
+        episodeList.innerHTML = '';
+        for (let i = 1; i <= episodes; i++) {
+            const episodeItem = document.createElement('div');
+            episodeItem.className = `episode-item ${i === currentEpisodeNum ? 'active' : ''}`;
+            episodeItem.textContent = i;
+            episodeItem.addEventListener('click', () => {
+                // Обновляем текущую серию
+                currentEpisodeNum = i;
+                currentEpisode.textContent = i;
+                
+                // Обновляем активный элемент
+                document.querySelectorAll('.episode-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                episodeItem.classList.add('active');
+                
+                // Обновляем URL
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('episode', i);
+                window.history.replaceState({}, '', newUrl);
+                
+                // Обновляем плеер
+                updatePlayerEpisode(i);
+            });
+            episodeList.appendChild(episodeItem);
         }
-    });
+    }
     
-    // Загрузка сохранённой темы
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        document.body.classList.remove('dark-theme');
-        const icon = themeToggle.querySelector('i');
-        const text = themeToggle.querySelector('span') || themeToggle;
-        icon.className = 'fas fa-sun';
-        if (text.tagName === 'SPAN') {
-            text.textContent = 'Светлая тема';
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i> Светлая тема';
+    // Обработчики для кнопок навигации
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentEpisodeNum > 1) {
+                currentEpisodeNum--;
+                updateEpisodeNavigation();
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentEpisodeNum < episodes) {
+                currentEpisodeNum++;
+                updateEpisodeNavigation();
+            }
+        });
+    }
+    
+    function updateEpisodeNavigation() {
+        // Обновляем отображение текущей серии
+        if (currentEpisode) {
+            currentEpisode.textContent = currentEpisodeNum;
+        }
+        
+        // Обновляем активный элемент в списке
+        document.querySelectorAll('.episode-item').forEach((item, index) => {
+            item.classList.toggle('active', index + 1 === currentEpisodeNum);
+        });
+        
+        // Обновляем URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('episode', currentEpisodeNum);
+        window.history.replaceState({}, '', newUrl);
+        
+        // Обновляем плеер
+        updatePlayerEpisode(currentEpisodeNum);
+    }
+}
+
+// Обновление серии в плеере
+function updatePlayerEpisode(episode) {
+    if (!currentAnime) return;
+    
+    console.log(`Переключение на серию ${episode}`);
+    
+    // Если у аниме есть отдельные ссылки для каждой серии
+    if (currentAnime.episode_links && currentAnime.episode_links[episode - 1]) {
+        const player = document.getElementById('kodikPlayer');
+        if (player) {
+            player.src = currentAnime.episode_links[episode - 1];
         }
     }
 }
@@ -700,20 +611,16 @@ function getUrlParameter(name) {
     return urlParams.get(name);
 }
 
-function getRatingColor(rating) {
-    if (rating >= 8.5) return 'linear-gradient(45deg, #28a745, #20c997)';
-    if (rating >= 7.0) return 'linear-gradient(45deg, #17a2b8, #20c997)';
-    if (rating >= 5.0) return 'linear-gradient(45deg, #ffc107, #fd7e14)';
-    return 'linear-gradient(45deg, #dc3545, #fd7e14)';
-}
-
 function getStatusText(status) {
     if (!status) return 'Неизвестно';
     
     const statusMap = {
-        'Завершен': 'Завершен',
-        'Анонсирован': 'Анонсирован',
+        'ongoing': 'Онгоинг',
+        'completed': 'Завершен',
+        'upcoming': 'Анонсирован',
         'онгоинг': 'Онгоинг',
+        'завершен': 'Завершен',
+        'анонсирован': 'Анонсирован'
     };
     
     return statusMap[status.toLowerCase()] || status;
@@ -726,5 +633,26 @@ function getAnimeBadge(anime) {
     return null;
 }
 
+// Функция для кнопки "Поделиться"
+function shareAnime() {
+    if (navigator.share) {
+        navigator.share({
+            title: currentAnime.title,
+            text: `Смотри "${currentAnime.title}" на Re:Voice Anime`,
+            url: window.location.href
+        });
+    } else {
+        // Копирование ссылки в буфер обмена
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+                alert('Ссылка скопирована в буфер обмена!');
+            })
+            .catch(() => {
+                prompt('Скопируйте ссылку:', window.location.href);
+            });
+    }
+}
+
 // Экспортируем функции для использования в консоли
 window.loadAnimeList = loadAnimeList;
+window.shareAnime = shareAnime;
