@@ -1,16 +1,16 @@
 [
   {
     "id": 1,
-    "title": "Ван-Пис",
-    "description": "Монки Д. Луффи мечтает стать Королём пиратов...",
-    "poster": "https://static.wikia.nocookie.net/onepiece/images/6/6d/One_Piece_Logo.svg/revision/latest?cb=20210804071428&path-prefix=ru",
-    "year": 1999,
+    "title": "О движении Земли (2024)",
+    "description": "описание не доступны",
+    "poster": "https://shikimori.one/uploads/poster/animes/52215/main_2x-724abb52e20c9a8b65751c977be61da0.webp",
+    "year": 2025,
     "rating": 8.7,
-    "status": "Онгоинг",
+    "status": "Закончен",
     "type": "TV Сериал",
-    "episodes": 1100,
-    "genres": ["Приключения", "Комедия", "Фэнтези"],
+    "episodes": 25,
+    "genres": ["Драма", "Исторический", "Сэйнэн"],
     "voice": "Re:Voice",
-    "kodik_link": "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p"
+    "kodik_link": "https://kodik.online/serial/62796/nM5kmn69c257a4?season=1&episode=1&only_episode=true",
   }
 ]
