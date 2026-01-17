@@ -9,8 +9,6 @@ const CONFIG = {
 // Глобальные переменные
 let animeList = [];
 let currentAnime = null;
-let currentFilter = 'all';
-let currentSort = 'new';
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
@@ -33,7 +31,8 @@ function initHamburgerMenu() {
     const navMenu = document.getElementById('navMenu');
     
     if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
+        hamburger.addEventListener('click', (event) => {
+            event.stopPropagation();
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             
@@ -53,7 +52,18 @@ function initHamburgerMenu() {
         
         // Закрытие меню при клике вне его
         document.addEventListener('click', (event) => {
-            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+            if (navMenu.classList.contains('active') && 
+                !navMenu.contains(event.target) && 
+                !hamburger.contains(event.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Закрытие меню при нажатии ESC
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && navMenu.classList.contains('active')) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
                 document.body.style.overflow = '';
@@ -66,15 +76,6 @@ function initHamburgerMenu() {
 async function initMainPage() {
     // Загрузка списка аниме
     await loadAnimeList();
-    
-    // Инициализация поиска
-    initSearch();
-    
-    // Инициализация фильтров
-    initFilters();
-    
-    // Инициализация сортировки
-    initSorting();
     
     // Кнопка повторной загрузки
     document.getElementById('retryBtn')?.addEventListener('click', loadAnimeList);
@@ -137,8 +138,10 @@ async function loadAnimeList() {
             throw new Error('Список аниме пустой');
         }
         
-        // Применяем текущие фильтры и сортировку
-        applyFiltersAndSort();
+        // Отображаем аниме на главной странице
+        if (animeGrid) {
+            renderAnimeList(animeList);
+        }
         
         if (loadingElement) loadingElement.style.display = 'none';
         
@@ -148,44 +151,26 @@ async function loadAnimeList() {
         if (loadingElement) loadingElement.style.display = 'none';
         if (errorElement) {
             errorElement.style.display = 'block';
+            errorElement.innerHTML = `
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Ошибка загрузки</h3>
+                <p>Не удалось загрузить список аниме. Проверьте:</p>
+                <ol style="text-align: left; margin: 20px auto; max-width: 400px;">
+                    <li>Подключение к интернету</li>
+                    <li>Настройки репозитория GitHub</li>
+                    <li>Формат файла anime_list.json</li>
+                </ol>
+                <button id="retryBtn" class="retry-btn">
+                    <i class="fas fa-redo"></i> Попробовать снова
+                </button>
+            `;
+            
+            // Перепривязываем обработчик к новой кнопке
+            document.getElementById('retryBtn')?.addEventListener('click', loadAnimeList);
         }
     }
-}
-
-// Применение фильтров и сортировки
-function applyFiltersAndSort() {
-    let filteredList = [...animeList];
-    
-    // Применяем фильтр
-    if (currentFilter === 'ongoing') {
-        filteredList = filteredList.filter(anime => 
-            anime.status && anime.status.toLowerCase() === 'ongoing'
-        );
-    } else if (currentFilter === 'completed') {
-        filteredList = filteredList.filter(anime => 
-            anime.status && anime.status.toLowerCase() === 'completed'
-        );
-    }
-    
-    // Применяем сортировку
-    switch (currentSort) {
-        case 'new':
-            filteredList.sort((a, b) => (b.year || 0) - (a.year || 0));
-            break;
-        case 'rating':
-            filteredList.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-            break;
-        case 'name':
-            filteredList.sort((a, b) => {
-                const titleA = a.title || '';
-                const titleB = b.title || '';
-                return titleA.localeCompare(titleB, 'ru');
-            });
-            break;
-    }
-    
-    // Отображаем отфильтрованный список
-    renderAnimeList(filteredList);
 }
 
 // Рендеринг списка аниме
@@ -201,8 +186,8 @@ function renderAnimeList(list) {
         animeGrid.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-film"></i>
-                <h3>Аниме не найдены</h3>
-                <p>Попробуйте изменить фильтры или поисковый запрос</p>
+                <h3>Список аниме пуст</h3>
+                <p>Добавьте аниме в файл anime_list.json в репозитории</p>
             </div>
         `;
         return;
@@ -224,24 +209,18 @@ function createAnimeCard(anime) {
     // Используем изображение-заглушку, если постер не указан
     const posterUrl = anime.poster || 'https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image';
     
-    // Определяем бейдж
-    const badge = getAnimeBadge(anime);
-    
     card.innerHTML = `
         <div class="anime-poster-container">
             <img src="${posterUrl}" alt="${anime.title}" class="anime-poster" 
                  onerror="this.src='https://via.placeholder.com/280x350/0f1e2d/ffffff?text=No+Image'">
             <div class="anime-overlay"></div>
-            ${badge ? `<div class="anime-badge">${badge}</div>` : ''}
+            ${anime.status === 'ongoing' ? '<div class="anime-badge">Онгоинг</div>' : ''}
         </div>
         <div class="anime-content">
             <h3 class="anime-title">${anime.title}</h3>
             <div class="anime-meta">
                 <span class="anime-rating">
                     <i class="fas fa-star"></i> ${anime.rating || 'Н/Д'}
-                </span>
-                <span class="anime-status ${anime.status?.toLowerCase() || 'ongoing'}">
-                    ${getStatusText(anime.status)}
                 </span>
             </div>
             ${anime.genres ? `
@@ -340,7 +319,7 @@ function loadKodikPlayer() {
             <div class="placeholder-content">
                 <i class="fas fa-exclamation-triangle"></i>
                 <h3>Плеер недоступен</h3>
-                <p>Ссылка на плеер не указана</p>
+                <p>Ссылка на плеер не указана в данных аниме</p>
             </div>
         `;
     }
@@ -352,6 +331,17 @@ function loadSimilarAnime() {
     
     const similarGrid = document.getElementById('similarAnime');
     if (!similarGrid) return;
+    
+    // Если в списке только одно аниме (текущее), не показываем похожие
+    if (animeList.length <= 1) {
+        similarGrid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-info-circle"></i>
+                <p>Нет похожих аниме в списке</p>
+            </div>
+        `;
+        return;
+    }
     
     // Фильтруем аниме по жанрам (если есть)
     const currentGenres = currentAnime.genres || [];
@@ -414,90 +404,6 @@ function loadSimilarAnime() {
     });
 }
 
-// Инициализация фильтров
-function initFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок фильтров
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс нажатой кнопке
-            this.classList.add('active');
-            
-            // Обновляем текущий фильтр
-            currentFilter = this.dataset.filter;
-            
-            // Применяем фильтры и сортировку
-            applyFiltersAndSort();
-        });
-    });
-}
-
-// Инициализация сортировки
-function initSorting() {
-    const sortButtons = document.querySelectorAll('.sort-btn[data-sort]');
-    
-    sortButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок сортировки
-            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс нажатой кнопке
-            this.classList.add('active');
-            
-            // Обновляем текущую сортировку
-            currentSort = this.dataset.sort;
-            
-            // Применяем фильтры и сортировку
-            applyFiltersAndSort();
-        });
-    });
-}
-
-// Инициализация поиска
-function initSearch() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
-    
-    let searchTimeout;
-    
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        
-        searchTimeout = setTimeout(() => {
-            const searchTerm = this.value.toLowerCase().trim();
-            
-            if (searchTerm.length === 0) {
-                applyFiltersAndSort();
-                return;
-            }
-            
-            const filtered = animeList.filter(anime => {
-                // Поиск по названию
-                if (anime.title && anime.title.toLowerCase().includes(searchTerm)) {
-                    return true;
-                }
-                
-                // Поиск по описанию
-                if (anime.description && anime.description.toLowerCase().includes(searchTerm)) {
-                    return true;
-                }
-                
-                // Поиск по жанрам
-                if (anime.genres && Array.isArray(anime.genres)) {
-                    return animeGenres.some(genre => 
-                        genre.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                return false;
-            });
-            
-            renderAnimeList(filtered);
-        }, 300);
-    });
-}
-
 // Инициализация управления сериями
 function initEpisodeControls() {
     const prevBtn = document.getElementById('prevEpisode');
@@ -530,7 +436,7 @@ function initEpisodeControls() {
             episodeItem.addEventListener('click', () => {
                 // Обновляем текущую серию
                 currentEpisodeNum = i;
-                currentEpisode.textContent = i;
+                if (currentEpisode) currentEpisode.textContent = i;
                 
                 // Обновляем активный элемент
                 document.querySelectorAll('.episode-item').forEach(item => {
@@ -611,32 +517,12 @@ function getUrlParameter(name) {
     return urlParams.get(name);
 }
 
-function getStatusText(status) {
-    if (!status) return 'Неизвестно';
-    
-    const statusMap = {
-        'ongoing': 'Онгоинг',
-        'completed': 'Завершен',
-        'upcoming': 'Анонсирован',
-        'онгоинг': 'Онгоинг',
-    };
-    
-    return statusMap[status.toLowerCase()] || status;
-}
-
-function getAnimeBadge(anime) {
-    if (anime.status === 'ongoing') return 'Онгоинг';
-    if (anime.rating >= 8.5) return 'Топ';
-    if (anime.year >= new Date().getFullYear() - 1) return 'Новинка';
-    return null;
-}
-
 // Функция для кнопки "Поделиться"
 function shareAnime() {
     if (navigator.share) {
         navigator.share({
-            title: currentAnime.title,
-            text: `Смотри "${currentAnime.title}" на Re:Voice Anime`,
+            title: currentAnime?.title || 'Аниме',
+            text: `Смотри это аниме на Re:Voice Anime`,
             url: window.location.href
         });
     } else {
