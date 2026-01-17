@@ -18,7 +18,7 @@
             </div>
             
             <button class="back-btn" onclick="window.location.href='index.html'">
-                <i class="fas fa-arrow-left"></i> Назад к списку
+                <i class="fas fa-arrow-left"></i> Назад
             </button>
         </div>
     </nav>
@@ -31,8 +31,11 @@
                 <div class="player-header">
                     <h2 id="playerTitle">Загрузка...</h2>
                     <div class="player-info">
-                        <span class="episode-info">Серия 1</span>
+                        <span class="episode-info" id="currentEpisodeTitle">Серия 1</span>
                         <span class="quality">HD 720p</span>
+                        <span class="voice-badge" id="voiceBadge">
+                            <i class="fas fa-microphone"></i> Re:Voice
+                        </span>
                     </div>
                 </div>
                 
@@ -57,17 +60,32 @@
                         </button>
                         <div class="current-episode">
                             <span>Текущая серия:</span>
-                            <strong id="currentEpisode">1</strong>
+                            <div class="episode-display">
+                                <strong id="currentEpisodeNumber">1</strong>
+                                <small id="currentEpisodeTotal">из <span id="totalEpisodesCount">?</span></small>
+                            </div>
                         </div>
                         <button id="nextEpisode" class="episode-nav-btn">
                             Следующая <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
                     
+                    <div class="episode-progress">
+                        <div class="progress-info">
+                            <span>Доступно серий:</span>
+                            <span id="availableEpisodes">0</span>
+                            <span>из</span>
+                            <span id="totalEpisodes">?</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    
                     <div class="episode-list">
                         <div class="episode-list-header">
                             <h4><i class="fas fa-list-ol"></i> Список серий</h4>
-                            <span id="totalEpisodes">Всего: 12 серий</span>
+                            <span class="last-updated" id="lastUpdated">Последнее обновление: загрузка...</span>
                         </div>
                         <div id="episodeList" class="episode-grid">
                             <!-- Список серий будет загружен сюда -->
@@ -79,13 +97,42 @@
             <!-- Информация об аниме -->
             <div class="anime-info-section">
                 <div class="anime-header">
-                    <img id="animePoster" class="anime-poster" src="" alt="Постер">
+                    <div class="anime-poster-container">
+                        <img id="animePoster" class="anime-poster" src="" alt="Постер">
+                        <div class="anime-status-badge" id="statusBadge">
+                            <i class="fas fa-circle"></i> <span id="statusText">Загрузка...</span>
+                        </div>
+                    </div>
                     <div class="anime-title-section">
                         <h1 id="animeTitle">Загрузка...</h1>
                         <div class="anime-meta">
-                            <span class="meta-item"><i class="fas fa-star"></i> <span id="animeRating">0.0</span></span>
-                            <span class="meta-item"><i class="fas fa-calendar"></i> <span id="animeYear">2024</span></span>
-                            <span class="meta-item"><i class="fas fa-clock"></i> <span id="animeEpisodes">?</span> серий</span>
+                            <span class="meta-item rating">
+                                <i class="fas fa-star"></i> 
+                                <span id="animeRating">0.0</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i> 
+                                <span id="animeYear">2024</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-film"></i> 
+                                <span id="animeType">TV Сериал</span>
+                            </span>
+                        </div>
+                        
+                        <div class="episode-stats">
+                            <div class="stat">
+                                <span class="stat-label">Всего серий:</span>
+                                <span class="stat-value" id="totalEpisodesStat">?</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Добавлено:</span>
+                                <span class="stat-value" id="addedEpisodes">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Озвучка:</span>
+                                <span class="stat-value">Re:Voice</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,31 +144,28 @@
                     </div>
                     
                     <div class="detail-section">
-                        <h3><i class="fas fa-microphone"></i> Озвучка</h3>
-                        <div class="voice-info">
-                            <div class="voice-item">
-                                <i class="fas fa-user"></i>
-                                <div>
-                                    <span class="voice-name">Re:Voice</span>
-                                    <span class="voice-quality">Профессиональная озвучка</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="detail-section">
                         <h3><i class="fas fa-tags"></i> Жанры</h3>
                         <div id="animeGenres" class="genres-list">
                             <!-- Жанры будут загружены сюда -->
                         </div>
                     </div>
                     
+                    <div class="detail-section">
+                        <h3><i class="fas fa-history"></i> История обновлений</h3>
+                        <div id="updateHistory" class="update-history">
+                            <p>Загрузка истории обновлений...</p>
+                        </div>
+                    </div>
+                    
                     <div class="action-buttons">
-                        <button class="action-btn favorite-btn">
+                        <button class="action-btn favorite-btn" id="favoriteBtn">
                             <i class="far fa-heart"></i> В избранное
                         </button>
                         <button class="action-btn share-btn" onclick="shareAnime()">
                             <i class="fas fa-share-alt"></i> Поделиться
+                        </button>
+                        <button class="action-btn report-btn" onclick="reportIssue()">
+                            <i class="fas fa-flag"></i> Сообщить
                         </button>
                     </div>
                 </div>
@@ -132,14 +176,42 @@
         <section class="similar-section">
             <div class="similar-header">
                 <h3><i class="fas fa-thumbs-up"></i> Похожие аниме</h3>
-                <a href="index.html" class="view-all">Все аниме <i class="fas fa-arrow-right"></i></a>
+                <div class="similar-filters">
+                    <button class="similar-filter active" onclick="filterSimilar('same-genre')">По жанру</button>
+                    <button class="similar-filter" onclick="filterSimilar('same-status')">По статусу</button>
+                    <button class="similar-filter" onclick="filterSimilar('random')">Случайные</button>
+                </div>
             </div>
             <div id="similarAnime" class="similar-grid">
                 <!-- Похожие аниме будут загружены сюда -->
+            </div>
+        </section>
+        
+        <!-- Информация об обновлениях -->
+        <section class="updates-section">
+            <div class="updates-header">
+                <h3><i class="fas fa-sync-alt"></i> Система обновлений</h3>
+            </div>
+            <div class="updates-info">
+                <div class="update-card">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    <h4>Автоматические обновления</h4>
+                    <p>Новые серии автоматически появляются на сайте после добавления в anime_list.json</p>
+                </div>
+                <div class="update-card">
+                    <i class="fas fa-clock"></i>
+                    <h4>Частота обновлений</h4>
+                    <p>Сайт проверяет обновления каждые 5 минут</p>
+                </div>
+                <div class="update-card">
+                    <i class="fas fa-code-branch"></i>
+                    <h4>Как добавить серию</h4>
+                    <p>Добавьте объект серии в массив episodes_data в anime_list.json</p>
+                </div>
             </div>
         </section>
     </main>
 
     <script src="script.js"></script>
 </body>
-    </html>
+</html>
