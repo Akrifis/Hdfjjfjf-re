@@ -3,118 +3,14 @@
     "id": 1,
     "title": "Ван-Пис",
     "description": "Монки Д. Луффи мечтает стать Королём пиратов...",
-    "poster": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=500",
+    "poster": "https://static.wikia.nocookie.net/onepiece/images/6/6d/One_Piece_Logo.svg/revision/latest?cb=20210804071428&path-prefix=ru",
     "year": 1999,
     "rating": 8.7,
-    "status": "Онгоинг",
+    "status": "ongoing",
     "type": "TV Сериал",
     "episodes": 1100,
-    "genres": ["Приключения", "Комедия", "Фэнтези", "Экшен"],
+    "genres": ["Приключения", "Комедия", "Фэнтези"],
     "voice": "Re:Voice",
-    "episodes_data": [
-      {
-        "number": 1,
-        "title": "Начало путешествия",
-        "kodik_link": "https://kodik.info/serial/1248/...?episode=1",
-        "added_date": "2024-01-15"
-      },
-      {
-        "number": 2,
-        "title": "Капитан пиратов",
-        "kodik_link": "https://kodik.info/serial/1248/...?episode=2",
-        "added_date": "2024-01-16"
-      },
-      {
-        "number": 3,
-        "title": "Новый член команды",
-        "kodik_link": "https://kodik.info/serial/1248/...?episode=3",
-        "added_date": "2024-01-17"
-      },
-      {
-        "number": 4,
-        "title": "Встреча с врагом",
-        "kodik_link": "https://kodik.info/serial/1248/...?episode=4",
-        "added_date": "2024-01-18"
-      },
-      {
-        "number": 5,
-        "title": "Первая битва",
-        "kodik_link": "https://kodik.info/serial/1248/...?episode=5",
-        "added_date": "2024-01-19"
-      }
-    ],
-    "last_updated": "2024-01-19"
-  },
-  {
-    "id": 2,
-    "title": "Новое аниме: Легенда о героях",
-    "description": "История о юном герое, который должен спасти мир...",
-    "poster": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=500",
-    "year": 2024,
-    "rating": 0,
-    "status": "Анонс",
-    "type": "TV Сериал",
-    "episodes": 12,
-    "genres": ["Фэнтези", "Приключения", "Драма"],
-    "voice": "Re:Voice",
-    "episodes_data": [],
-    "release_date": "2024-03-01"
-  },
-  {
-    "id": 3,
-    "title": "Атака Титанов: Финальный сезон",
-    "description": "Завершение эпической саги о противостоянии человечества и титанов...",
-    "poster": "https://images.unsplash.com/photo-1531315630201-bb15abeb1653?auto=format&fit=crop&w=500",
-    "year": 2023,
-    "rating": 9.2,
-    "status": "Завершен",
-    "type": "TV Сериал",
-    "episodes": 28,
-    "genres": ["Драма", "Фэнтези", "Ужасы", "Экшен"],
-    "voice": "Re:Voice",
-    "episodes_data": [
-      {
-        "number": 1,
-        "title": "Начало конца",
-        "kodik_link": "https://kodik.info/serial/1758/...?episode=1",
-        "added_date": "2023-10-01"
-      },
-      {
-        "number": 2,
-        "title": "Решающая битва",
-        "kodik_link": "https://kodik.info/serial/1758/...?episode=2",
-        "added_date": "2023-10-08"
-      }
-      // ... другие серии
-    ],
-    "last_updated": "2024-01-10"
-  },
-  {
-    "id": 4,
-    "title": "Магическая битва",
-    "description": "Студенты магической школы сражаются с проклятиями...",
-    "poster": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=500",
-    "year": 2020,
-    "rating": 8.6,
-    "status": "Онгоинг",
-    "type": "TV Сериал",
-    "episodes": 47,
-    "genres": ["Экшен", "Фэнтези", "Сверхъестественное"],
-    "voice": "Re:Voice",
-    "episodes_data": [
-      {
-        "number": 1,
-        "title": "Рождённый заново",
-        "kodik_link": "https://kodik.info/serial/...?episode=1",
-        "added_date": "2024-01-05"
-      },
-      {
-        "number": 2,
-        "title": "Проклятый объект",
-        "kodik_link": "https://kodik.info/serial/...?episode=2",
-        "added_date": "2024-01-12"
-      }
-    ],
-    "last_updated": "2024-01-12"
+    "kodik_link": "https://kodik.info/serial/1248/56e8a2a9c7c70b3a5fe1f8b6b5c7e5db/720p"
   }
-  ]
+]
