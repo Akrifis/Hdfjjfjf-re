@@ -1,6 +1,6 @@
 // Конфигурация
 const CONFIG = {
-    GITHUB_REPO: 'https://github.com/Akrifis/Hdfjjfjf-re',
+    GITHUB_REPO: 'Akrifis/Hdfjjfjf-re',
     BRANCH: 'main',
     ANIME_LIST_FILE: 'anime.json',
     GITHUB_RAW_URL: 'https://raw.githubusercontent.com/Akrifis/Hdfjjfjf-re/main/anime.json'
